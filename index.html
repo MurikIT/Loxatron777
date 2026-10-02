@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Биометрический Сканер Мозга v2.0</title>
+    <style>
+        body {
+            background-color: #0d1117;
+            color: #00ff66;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .scanner-card {
+            border: 2px solid #00ff66;
+            border-radius: 12px;
+            padding: 30px;
+            background: rgba(0, 20, 0, 0.6);
+            box-shadow: 0 0 20px rgba(0, 255, 102, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .scan-area {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            border: 2px dashed #00ff66;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            overflow: hidden;
+        }
+
+        .laser {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #ff0055;
+            box-shadow: 0 0 10px #ff0055;
+            animation: scan 1.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+
+        .progress-bar {
+            width: 100%;
+            background-color: #161b22;
+            border: 1px solid #00ff66;
+            border-radius: 5px;
+            height: 20px;
+            margin: 20px 0;
+            overflow: hidden;
+            display: none;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #00ff66;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+
+        button {
+            background-color: transparent;
+            color: #00ff66;
+            border: 2px solid #00ff66;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background-color: #00ff66;
+            color: #0d1117;
+            box-shadow: 0 0 10px #00ff66;
+        }
+
+        #status {
+            font-size: 18px;
+            margin-top: 15px;
+            min-height: 24px;
+        }
+
+        .result {
+            color: #ff3366 !important;
+            font-size: 22px !important;
+            font-weight: bold;
+            animation: blink 0.8s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="scanner-card">
+        <h2>САКНЕР МОЗГА v2.0</h2>
+        <p>Приложите палец или посмотрите в камеру</p>
+
+        <div class="scan-area">
+            🧠
+            <div class="laser" id="laser"></div>
+        </div>
+
+        <button id="scanBtn" onclick="startScan()">НАЧАТЬ СКАНИРОВАНИЕ</button>
+
+        <div class="progress-bar" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div id="status">Ожидание запускa...</div>
+    </div>
+
+    <script>
+        function startScan() {
+            const btn = document.getElementById('scanBtn');
+            const laser = document.getElementById('laser');
+            const progressBar = document.getElementById('progressBar');
+            const progressFill = document.getElementById('progressFill');
+            const status = document.getElementById('status');
+
+            btn.style.display = 'none';
+            laser.style.display = 'block';
+            progressBar.style.display = 'block';
+
+            const steps = [
+                "Инициализация датчиков...",
+                "Подключение к нейросети...",
+                "Анализ черепной коробки...",
+                "Поиск мыслей...",
+                "Поиск нейронных связей...",
+                "Финализация отчета..."
+            ];
+
+            let progress = 0;
+            let stepIndex = 0;
+
+            const interval = setInterval(() => {
+                progress += 2;
+                progressFill.style.width = progress + '%';
+
+                if (progress % 20 === 0 && stepIndex < steps.length) {
+                    status.innerText = steps[stepIndex];
+                    stepIndex++;
+                }
+
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    laser.style.display = 'none';
+                    status.innerHTML = "<span class='result'>ОШИБКА: Найдено 0 мозговых клеток! 🧠❌</span>";
+                }
+            }, 100);
+        }
+    </script>
+
+</body>
+</html>
